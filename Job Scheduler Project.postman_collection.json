@@ -1,0 +1,471 @@
+{
+	"info": {
+		"_postman_id": "5a1720c4-291e-405c-99b3-57e325ecf8a0",
+		"name": "Job Scheduler Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22779310"
+	},
+	"item": [
+		{
+			"name": "Generate Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json()\r",
+							"if(pm.response.code == 200){\r",
+							"   \r",
+							"    pm.collectionVariables.set('token', response.AccessToken);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Username\": \"{{userName}}\",\r\n    \"Password\": \"{{adminPassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/authenticate",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"authenticate"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Wrong Credentials",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Username\": \"{{adminUserName}}\",\r\n    \"Password\": \"wrongPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/authenticate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Create Job",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomFileName}}\",\r\n\r\n    // Case Fixed\r\n    // \"schedule_type\": \"FIXED\",\r\n    // \"fixed_rate_ms\": {{$randomInt}},\r\n\r\n    // Case Cron\r\n    \"schedule_type\": \"CRON\",\r\n    \"cron_expression\": \"{{quartz_cron}}\",\r\n\r\n    \"payload\": {{random_json}},\r\n    \"retry_policy\": {{random_json}},\r\n    \"status\": \"PAUSED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/jobs",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"jobs"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Cron Job",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFileName}}\",\r\n    \"schedule_type\": \"CRON\",\r\n    \"cron_expression\": \"{{quartz_cron}}\",\r\n    \"payload\": {{random_json}},\r\n    \"retry_policy\": {{random_json}},\r\n    \"status\": \"PENDING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jobs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"jobs"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Create Fixed Rate Job",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomFileName}}\",\r\n    \"schedule_type\": \"FIXED\",\r\n    \"fixed_rate_ms\": {{$randomInt}}0000,\r\n    \"payload\": {{random_json}},\r\n    \"retry_policy\": {{random_json}},\r\n    \"status\": \"PENDING\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jobs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"jobs"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "Create Job Validation Errors",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"schedule_type\": \"testType\",\r\n    \"fixed_rate_ms\": -1,\r\n    \"cron_expression\": \"wrongCronExpression\",\r\n    \"status\": \"testStatus\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jobs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"jobs"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Update Job",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    // \"name\": \"Test Job name Updated\",\r\n    // \"schedule_type\": \"Monthly Updated\",\r\n    // \"cron_expression\": \"Testing Data Updated\",\r\n    // \"fixed_rate_ms\": 5000,\r\n    // \"payload\": {\r\n    //     \"key Updated\": \"Test Value Updateds\"\r\n    // },\r\n    // \"retry_policy\": {\r\n    //     \"policy Updated\": \"Test Policy Value Updated\"\r\n    // },\r\n    \"status\": \"PAUSED\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/jobs/{{jobId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"jobs",
+						"{{jobId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Jobs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/jobs?page=2&size=6",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"jobs"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "size",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Job By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/jobs/{{jobId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"jobs",
+						"{{jobId}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Wrong Job ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/jobs/068554c9-45ab-6688-8766-cacb1030512a",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"jobs",
+								"068554c9-45ab-6688-8766-cacb1030512a"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"function getRandomJson() {\r",
+					"    return {\r",
+					"        id: Math.floor(Math.random() * 10000),\r",
+					"        name: `Item-${Math.floor(Math.random() * 100)}`,\r",
+					"        active: Math.random() > 0.5,\r",
+					"        time: (Math.random() * 1000).toFixed(2),\r",
+					"        createdAt: new Date().toISOString()\r",
+					"    };\r",
+					"}\r",
+					"\r",
+					"// Function to generate valid Quartz cron expressions (6-7 fields)\r",
+					"function generateValidQuartzCron() {\r",
+					"    const patterns = [\r",
+					"        // Every X seconds\r",
+					"        () => `*/${Math.floor(Math.random() * 30) + 1} * * * * ?`,\r",
+					"        \r",
+					"        // Every X minutes\r",
+					"        () => `0 */${Math.floor(Math.random() * 30) + 1} * * * ?`,\r",
+					"        \r",
+					"        // Daily at specific time\r",
+					"        () => {\r",
+					"            const minute = Math.floor(Math.random() * 60);\r",
+					"            const hour = Math.floor(Math.random() * 24);\r",
+					"            return `0 ${minute} ${hour} * * ?`;\r",
+					"        },\r",
+					"        \r",
+					"        // Weekly on specific day (1-7 where 1=Sunday)\r",
+					"        () => {\r",
+					"            const minute = Math.floor(Math.random() * 60);\r",
+					"            const hour = Math.floor(Math.random() * 24);\r",
+					"            const dayOfWeek = Math.floor(Math.random() * 7) + 1;\r",
+					"            return `0 ${minute} ${hour} ? * ${dayOfWeek}`;\r",
+					"        },\r",
+					"        \r",
+					"        // Monthly on specific day\r",
+					"        () => {\r",
+					"            const minute = Math.floor(Math.random() * 60);\r",
+					"            const hour = Math.floor(Math.random() * 24);\r",
+					"            const dayOfMonth = Math.floor(Math.random() * 28) + 1;\r",
+					"            return `0 ${minute} ${hour} ${dayOfMonth} * ?`;\r",
+					"        },\r",
+					"        \r",
+					"        // Your specific example (every 5 minutes) - Quartz version\r",
+					"        // () => `0 0/5 * * * ?`\r",
+					"    ];\r",
+					"\r",
+					"    return patterns[Math.floor(Math.random() * patterns.length)]();\r",
+					"}\r",
+					"\r",
+					"\r",
+					"pm.collectionVariables.set(\"quartz_cron\", generateValidQuartzCron());\r",
+					"pm.collectionVariables.set(\"random_json\", JSON.stringify(getRandomJson()));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:9090",
+			"type": "default"
+		},
+		{
+			"key": "userName",
+			"value": "admin",
+			"type": "default"
+		},
+		{
+			"key": "adminUserName",
+			"value": "admin",
+			"type": "default"
+		},
+		{
+			"key": "adminPassword",
+			"value": "adminadmin",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwic3ViIjoiYWRtaW4iLCJpYXQiOjE3NDU4MDIwOTksImV4cCI6MTc0NTg4ODQ5OX0.482RvimG7IAb_W-AzoTfB673s_bGpMQ_MMVeBRv0yGxDa2E9fm-QGZaWljIPmHTd",
+			"type": "default"
+		},
+		{
+			"key": "jobId",
+			"value": "98bdf833-e42b-4e7b-baf0-403510877bc6",
+			"type": "default"
+		},
+		{
+			"key": "realistic_cron",
+			"value": ""
+		},
+		{
+			"key": "random_json",
+			"value": ""
+		},
+		{
+			"key": "AccessToken",
+			"value": ""
+		},
+		{
+			"key": "quartz_cron",
+			"value": ""
+		}
+	]
+}
