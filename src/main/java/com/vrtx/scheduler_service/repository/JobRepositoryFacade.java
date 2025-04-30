@@ -2,7 +2,6 @@ package com.vrtx.scheduler_service.repository;
 
 import com.vrtx.scheduler_service.exceptions.BusinessException;
 import com.vrtx.scheduler_service.model.entity.JobEntity;
-import com.vrtx.scheduler_service.model.enums.JobStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

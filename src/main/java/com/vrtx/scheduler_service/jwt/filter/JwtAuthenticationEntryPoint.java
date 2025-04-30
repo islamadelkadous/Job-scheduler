@@ -1,7 +1,6 @@
 package com.vrtx.scheduler_service.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vrtx.scheduler_service.exceptions.BusinessException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +17,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+                         AuthenticationException authException) throws IOException {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
         problemDetail.setTitle("Unauthorized");
         problemDetail.setDetail(authException.getMessage());

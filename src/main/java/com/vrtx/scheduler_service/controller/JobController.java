@@ -5,7 +5,6 @@ import com.vrtx.scheduler_service.model.entity.JobEntity;
 import com.vrtx.scheduler_service.service.JobService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;

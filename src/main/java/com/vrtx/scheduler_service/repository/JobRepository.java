@@ -1,7 +1,6 @@
 package com.vrtx.scheduler_service.repository;
 
 import com.vrtx.scheduler_service.model.entity.JobEntity;
-import com.vrtx.scheduler_service.model.enums.JobStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

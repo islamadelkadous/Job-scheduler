@@ -19,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "/authenticate")
-    public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid AuthRequest authRequest) throws Exception {
+    public ResponseEntity<AuthResponse> authenticate(@RequestBody @Valid AuthRequest authRequest) {
         return ResponseEntity.ok(authService.authenticateUser(authRequest));
     }
 }
