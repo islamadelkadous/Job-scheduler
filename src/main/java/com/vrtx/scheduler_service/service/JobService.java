@@ -19,12 +19,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.vrtx.scheduler_service.utils.Constants.SCHEDULABLE_JOB_STATUS;
+
 @Service
 public class JobService {
 
     private final SchedulerService schedulerService;
     private final JobRepositoryFacade jobRepositoryFacade;
-
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -49,7 +50,9 @@ public class JobService {
         jobEntity.setVersion(1);
         validateIfJobDuplicate(jobEntity);
         JobEntity response =  jobRepositoryFacade.createJob(jobEntity);
-        schedulerService.scheduleNewJob(response);
+        if (SCHEDULABLE_JOB_STATUS.contains(response.getStatus())) {
+            schedulerService.scheduleNewJob(response);
+        }
         return response;
     }
 
@@ -61,7 +64,9 @@ public class JobService {
         validateIfJobDuplicate(currentEntity);
 
         JobEntity response = jobRepositoryFacade.updateJob(currentEntity);
-        schedulerService.scheduleNewJob(response);
+        if (SCHEDULABLE_JOB_STATUS.contains(response.getStatus())) {
+            schedulerService.scheduleNewJob(response);
+        }
         return response;
     }
 

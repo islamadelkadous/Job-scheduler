@@ -24,6 +24,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+import static com.vrtx.scheduler_service.utils.Constants.SKIP_MISSED_EXEC_STRATEGY;
+
 @Service
 @EnableScheduling
 @Slf4j
@@ -37,8 +39,6 @@ public class SchedulerService {
     private String missedExecutionStrategy;
 
     private final CronParser cronParser;
-
-    private static final String SKIP_MISSED_EXEC_STRATEGY = "skip";
 
     @Autowired
     public SchedulerService(JobRepositoryFacade jobRepositoryFacade, SimpleJobExecutor jobExecutor) {
